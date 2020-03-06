@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
 
 db = SQLAlchemy()
 
@@ -8,12 +10,8 @@ class Show(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     venue_id = db.Column(db.Integer, db.ForeignKey('venue.id'), nullable=False)
     artist_id = db.Column(db.Integer, db.ForeignKey('artist.id'), nullable=False)
-    start_time = db.Column(db.String(), nullable=False)
+    start_time = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, venue_id, artist_id, start_time):
-        self.venue_id = venue_id
-        self.artist_id = artist_id
-        self.start_time = start_time
 
     def insert(self):
         db.session.add(self)
@@ -42,9 +40,12 @@ class Venue(db.Model):
     website = db.Column(db.String())
     seeking_talent = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(120))
-    #upcoming_shows_count = db.Column(db.Integer)
-    past_shows_count = db.Column(db.Integer)
+    upcoming_shows_count = db.Column(db.Integer, default = 0)
+    upcoming_shows =  db.Column(db.ARRAY(db.String))
+    past_shows_count = db.Column(db.Integer, default = 0)
+    past_shows =  db.Column(db.ARRAY(db.String))
     shows_ven = db.relationship('Show', backref='venue')
+
 
     # TODO: implement any missing fields, as a database migration using Flask-Migrate
 
@@ -77,8 +78,10 @@ class Artist(db.Model):
     website = db.Column(db.String())
     seeking_venue = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(200))
-    #upcoming_shows_count = db.Column(db.Integer)
-    #past_shows_count = db.Column(db.Integer)
+    upcoming_shows_count = db.Column(db.Integer, default = 0)
+    upcoming_shows = db.Column(db.ARRAY(db.String))
+    past_shows_count = db.Column(db.Integer, default = 0)
+    past_shows = db.Column(db.ARRAY(db.String))
     facebook_link = db.Column(db.String())
     shows_art = db.relationship('Show', backref='artist')
 

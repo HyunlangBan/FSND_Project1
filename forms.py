@@ -6,6 +6,8 @@ from enums import Genre
 from wtforms.validators import ValidationError
 
 # custom valiator for genres
+genre_list = [g.value for g in Genre]
+
 def anyof_for_multiple_field(values):
     message = 'Invalid value, must be one of: {0}.'.format( ','.join(values) )
 
@@ -19,18 +21,13 @@ def anyof_for_multiple_field(values):
     return _validate
 
 # custom validator for phone
-def reformat_phone(values):
-    message = 'Invalid phone number.'
 
-    def _validate(form, field):
-        error = False
-        phone_num = field.data.replace('-', '')
-        if len(phone_num)!=10:
-            error = True
-        
-        if error:
-            raise ValidationError(message)
-    return _validate
+
+def validate_phone(form, field):
+    phone_num = field.data.replace('-', '')
+    if len(phone_num)!=10:
+        raise ValidationError('Invalid phone number.')
+
 
 
 class ShowForm(Form):
@@ -113,7 +110,7 @@ class VenueForm(Form):
         'address', validators=[DataRequired()]
     )
     phone = StringField(
-        'phone', validators=[DataRequired(), reformat_phone]
+        'phone', validators=[DataRequired(), validate_phone]
     )
     image_link = StringField(
         'image_link', validators=[URL()]
@@ -123,12 +120,12 @@ class VenueForm(Form):
     genres = SelectMultipleField(
         #, anyof_for_multiple_field([ choice.value for choice in Genre ] )
         # TODO implement enum restriction
-        'genres', validators=[DataRequired(), anyof_for_multiple_field], 
+        'genres', validators=[DataRequired(), anyof_for_multiple_field(genre_list)], 
         choices=Genre.choices()
     
     )
     seeking_talent = BooleanField(
-        'seeking_talent', false_values=None
+        'seeking_talent'
     )
     seeking_description = StringField(
         'seeking_description'
