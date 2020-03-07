@@ -24,6 +24,11 @@ class Show(db.Model):
         db.session.delete(self)
         db.session.commit()
         
+    
+    def __repr__(self):
+        return f'<Venue {self.start_time}>'
+
+    
 
 class Venue(db.Model):
     __tablename__ = 'venue'
@@ -41,9 +46,7 @@ class Venue(db.Model):
     seeking_talent = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(120))
     upcoming_shows_count = db.Column(db.Integer, default = 0)
-    upcoming_shows =  db.Column(db.ARRAY(db.String))
     past_shows_count = db.Column(db.Integer, default = 0)
-    past_shows =  db.Column(db.ARRAY(db.String))
     shows_ven = db.relationship('Show', backref='venue')
 
 
@@ -79,9 +82,7 @@ class Artist(db.Model):
     seeking_venue = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(200))
     upcoming_shows_count = db.Column(db.Integer, default = 0)
-    upcoming_shows = db.Column(db.ARRAY(db.String))
     past_shows_count = db.Column(db.Integer, default = 0)
-    past_shows = db.Column(db.ARRAY(db.String))
     facebook_link = db.Column(db.String())
     shows_art = db.relationship('Show', backref='artist')
 

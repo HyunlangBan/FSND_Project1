@@ -20,9 +20,8 @@ def anyof_for_multiple_field(values):
             raise ValidationError(message)
     return _validate
 
+
 # custom validator for phone
-
-
 def validate_phone(form, field):
     phone_num = field.data.replace('-', '')
     if len(phone_num)!=10:
