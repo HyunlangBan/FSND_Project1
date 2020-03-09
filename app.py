@@ -211,6 +211,8 @@ def create_venue_submission():
 
     except:
       flash('An error occurred. Venue ' + request.form['name'] + ' could not be listed.')
+  else:
+        flash(form.errors)
   # TODO: on unsuccessful db insert, flash an error instead.
   # e.g., flash('An error occurred. Venue ' + data.name + ' could not be listed.')
   # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
